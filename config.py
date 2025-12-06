@@ -1,0 +1,5 @@
+BLACK = "#000000"
+WHITE = "#FFFFFF"
+FONT = ("sans serif", 16)
+WINDOW_WIDTH = 500
+WINDOW_HEIGHT = 700
