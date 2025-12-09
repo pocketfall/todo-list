@@ -18,9 +18,8 @@ class SimpleEntry(ctk.CTkFrame):
 
 class Task(ctk.CTkFrame):
 	"""
-	Class that houses, in this order, a checkbox, label, and button.
-	the checkbox is for marking if a task is complete or not, the label is the task
-	and the final button is for deleting the task
+	Class that has a checkbox with text to display the task the user enterd
+	and a button to delete the task
 	"""
 	def __init__(self, parent, 
 			  frame_color: str, 
@@ -29,12 +28,31 @@ class Task(ctk.CTkFrame):
 			  kill_command: Callable[[int], None], 
 			  task_number: int) -> None:
 		super().__init__(master= parent, fg_color= frame_color)
-		ctk.CTkCheckBox(self, width= 50).pack(expand= True, fill= "both", side= "left")
-		ctk.CTkLabel(self, text= label_text, font= font).pack(expand= True, fill= "both", side= "left")
+
+		# variables
+		self.task_text = label_text
+		self.is_checked = False
+		self.task_number = task_number
+
+		# widgets
+		ctk.CTkCheckBox(self,
+				  text= self.task_text,
+				  font= font,
+				  command= self.checked).pack(expand= True, fill= "both", side= "left")
 		ctk.CTkButton(self, 
-				command= lambda x= task_number: kill_command(x), 
+				command= lambda x= self.task_number: kill_command(x), 
 				text= "X", 
-				font= font).pack(expand= True, fill= "both", side= "left")
+				font= font,
+				width= 50).place(relx= .9, rely= .5, anchor= "center")
+	
+	def checked(self):
+		"""
+		update the self.is_checked variable for storing the task data
+		"""
+		if not self.is_checked:
+			self.is_checked = True
+		else:
+			self.is_checked = False
 
 class TaskContainer(ctk.CTkScrollableFrame):
 	"""
