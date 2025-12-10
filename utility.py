@@ -2,6 +2,18 @@ from components import Task
 from config import SAVE_FOLDER
 from glob import glob
 
+class TaskReader:
+	"""
+	class to handle reading task text/csv files and load the list
+	into the TaskContainer
+	"""
+	def __init__(self, task_list: str) -> None:
+		self.task_list = None
+	
+	def read_list(self) -> list:
+		pass
+		
+
 class TaskWriter:
 	"""
 	class made to manage the creation of a file to contain the todo list

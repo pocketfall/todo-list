@@ -1,6 +1,8 @@
 BLACK = "#000000"
 WHITE = "#FFFFFF"
+GREY = "#999999"
 TRANSPARENT = "transparent" # i know it seems silly, but may prove useful, i think
+CHECKBOX_TEXT_COLOR = "#000000"
 FONT = ("sans serif", 16)
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 700

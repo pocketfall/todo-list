@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from config import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, WHITE, FONT, TRANSPARENT
-from components import SimpleEntry, TaskContainer, Task, SuccessWindow
+from config import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, WHITE, FONT, TRANSPARENT, GREY
+from components import SimpleEntry, TaskContainer, Task, SuccessWindow, SaveAndLoadButtons
 from utility import TaskWriter
 
 class App(ctk.CTk):
@@ -40,9 +40,12 @@ class App(ctk.CTk):
 														 pady= 5)
 
 		# button to save the list
-		ctk.CTkButton(self, text= "Save list as file", font= self.font,
-				command= self.save_list).place(relx= .5, rely= .11, anchor= "center")
+		#ctk.CTkButton(self, text= "Save list as file", font= self.font,
+		#		command= self.save_list).place(relx= .5, rely= .11, anchor= "center")
+		save_and_load_buttons = SaveAndLoadButtons(self, frame_color= "pink")
+		save_and_load_buttons.place(relx= .5, rely= .11, anchor= "center")
 
+		# task container
 		self.task_container = TaskContainer(parent= self, frame_color= WHITE, tasks= self.task_list)
 		self.task_container.grid(row= 1, 
 						   column= 0, 
@@ -76,7 +79,7 @@ class App(ctk.CTk):
 		try:
 			task_number = len(self.task_list)
 			return Task(parent= self.task_container, 
-			   frame_color= TRANSPARENT, 
+			   frame_color= GREY, 
 			   label_text= self.task_string.get(), 
 			   font= self.font, 
 			   kill_command= self.delete_task,

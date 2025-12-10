@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from collections.abc import Callable
-from config import WINDOW_WIDTH, FONT
+from config import WINDOW_WIDTH, FONT, SAVE_FOLDER, CHECKBOX_TEXT_COLOR, BLACK
+from tkinter.filedialog import askopenfile, asksaveasfile
 
 class SimpleEntry(ctk.CTkFrame):
 	"""
@@ -15,6 +16,36 @@ class SimpleEntry(ctk.CTkFrame):
 		ctk.CTkLabel(self, text= "Enter a task: ", font= FONT).pack(side= "left", fill= "both", padx= 10)
 		ctk.CTkEntry(self, textvariable= entry_variable, font= font, width= WINDOW_WIDTH // 2).pack(side= "left", fill= "x", expand= True, padx= 10)
 		ctk.CTkButton(self, command= button_func, text= "Enter", font= font).pack(side= "left")
+
+class SaveAndLoadButtons(ctk.CTkFrame):
+	"""
+	buttons that handle saving and loading of todo list files
+	"""
+	def __init__(self, parent, frame_color: str) -> None:
+		super().__init__(master= parent, fg_color= frame_color)
+
+		# variables
+		self.loaded_list = None
+		self.list_filename = None
+
+		ctk.CTkButton(self,
+				text= "Save List",
+				font= FONT,
+				corner_radius= 10,
+				command= self.save_current_list).pack(expand= True, fill= "both", side= "left")
+		ctk.CTkButton(self,
+				text= "Load List",
+				font= FONT,
+				corner_radius= 10,
+				command= self.load_saved_list).pack(expand= True, fill= "both", side= "left")
+	
+	def save_current_list(self):
+		# this line can save the files to the save folder
+		filename = asksaveasfile(mode= "w", initialdir= f"./{SAVE_FOLDER}/", defaultextension= ".txt")
+	
+	def load_saved_list(self):
+		# this line can read a .txt file
+		filename = askopenfile(mode= "r", initialdir= f"./{SAVE_FOLDER}/", multiple= False).name
 
 class SuccessWindow(ctk.CTkToplevel):
 	"""
@@ -51,7 +82,9 @@ class Task(ctk.CTkFrame):
 		ctk.CTkCheckBox(self,
 				  text= self.task_text,
 				  font= FONT,
-				  command= self.checked).pack(expand= True, fill= "both", side= "left")
+				  command= self.checked,
+				  text_color= CHECKBOX_TEXT_COLOR,
+				  border_color= BLACK).pack(expand= True, fill= "both", side= "left")
 		ctk.CTkButton(self, 
 				command= lambda x= self.task_number: kill_command(x), 
 				text= "X", 
@@ -78,5 +111,5 @@ class TaskContainer(ctk.CTkScrollableFrame):
 	
 	def display_tasks(self, task_list: list[Task]) -> None:
 		for task in task_list:
-			task.pack(pady= 10, padx= 10, expand= True, fill= "x")
+			task.pack(pady= 10, padx= 10, expand= True, fill= "both")
 
