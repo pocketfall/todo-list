@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from collections.abc import Callable
-from config import WINDOW_WIDTH
+from config import WINDOW_WIDTH, FONT
 
 class SimpleEntry(ctk.CTkFrame):
 	"""
@@ -12,9 +12,22 @@ class SimpleEntry(ctk.CTkFrame):
 			  font: tuple, 
 			  button_func: Callable[[], None]) -> None:
 		super().__init__(master= parent, fg_color= frame_color)
-		ctk.CTkLabel(self, text= "Enter a task: ", font= font).pack(side= "left", fill= "both", padx= 10)
+		ctk.CTkLabel(self, text= "Enter a task: ", font= FONT).pack(side= "left", fill= "both", padx= 10)
 		ctk.CTkEntry(self, textvariable= entry_variable, font= font, width= WINDOW_WIDTH // 2).pack(side= "left", fill= "x", expand= True, padx= 10)
 		ctk.CTkButton(self, command= button_func, text= "Enter", font= font).pack(side= "left")
+
+class SuccessWindow(ctk.CTkToplevel):
+	"""
+	window that shows a brief message saying a todo list was saved
+	"""
+	def __init__(self):
+		super().__init__()
+		self.geometry("400x200")
+		self.title("Success")
+		self.resizable(False, False)
+
+		label_text = "List saved successfully!\nFind it in task_lists (the folder)"
+		ctk.CTkLabel(self, text= label_text, font= FONT).pack(fill= "both", expand= True, padx= 10, pady= 10)
 
 class Task(ctk.CTkFrame):
 	"""
@@ -37,7 +50,7 @@ class Task(ctk.CTkFrame):
 		# widgets
 		ctk.CTkCheckBox(self,
 				  text= self.task_text,
-				  font= font,
+				  font= FONT,
 				  command= self.checked).pack(expand= True, fill= "both", side= "left")
 		ctk.CTkButton(self, 
 				command= lambda x= self.task_number: kill_command(x), 

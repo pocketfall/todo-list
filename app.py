@@ -1,6 +1,7 @@
 import customtkinter as ctk
-from config import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, WHITE, FONT
-from components import SimpleEntry, TaskContainer, Task
+from config import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, WHITE, FONT, TRANSPARENT
+from components import SimpleEntry, TaskContainer, Task, SuccessWindow
+from utility import TaskWriter
 
 class App(ctk.CTk):
 	def __init__(self) -> None:
@@ -11,8 +12,14 @@ class App(ctk.CTk):
 		self.title("To do list")
 		ctk.set_appearance_mode("dark")
 
+		# grid configuration
+		self.columnconfigure(0, weight= 1, uniform= "a")
+		self.rowconfigure(0, weight= 1, uniform= "a")
+		self.rowconfigure(1, weight= 7, uniform= "a")
+
 		# variables
 		self.task_string = ctk.StringVar()
+		self.list_name = ctk.StringVar()
 		self.font = FONT
 		self.task_list = []
 		self.task_container = None
@@ -24,10 +31,39 @@ class App(ctk.CTk):
 		self.mainloop()
 	
 	def create_widgets(self) -> None:
-		SimpleEntry(parent= self, entry_variable= self.task_string, frame_color= BLACK,
-			  font= self.font, button_func= self.enter_task).pack(fill= "x", expand= True, padx= 10, pady= 5)
+		# simple entry to enter tasks
+		SimpleEntry(parent= self, entry_variable= self.task_string, frame_color= TRANSPARENT,
+			  font= self.font, button_func= self.enter_task).grid(row= 0, 
+														 column= 0, 
+														 sticky= "nsew",
+														 padx= 5,
+														 pady= 5)
+
+		# button to save the list
+		ctk.CTkButton(self, text= "Save list as file", font= self.font,
+				command= self.save_list).place(relx= .5, rely= .11, anchor= "center")
+
 		self.task_container = TaskContainer(parent= self, frame_color= WHITE, tasks= self.task_list)
-		self.task_container.pack(fill= "both", expand= True, padx= 5, pady= 5)
+		self.task_container.grid(row= 1, 
+						   column= 0, 
+						   sticky= "nsew",
+						   padx= 10,
+						   pady= 10)
+	
+	def save_list(self) -> None:
+		if self.task_list:
+			task_writer = TaskWriter(self.task_list)
+			task_writer.save_file()
+			self.show_successful_save()
+
+		else:
+			self.ask_for_tasks()
+	
+	def show_successful_save(self) -> None:
+		SuccessWindow()
+
+	def ask_for_tasks(self) -> None:
+		print("no tasks in list")
 	
 	def enter_task(self) -> None:
 		new_task = self.create_task()
@@ -40,7 +76,7 @@ class App(ctk.CTk):
 		try:
 			task_number = len(self.task_list)
 			return Task(parent= self.task_container, 
-			   frame_color= "red", 
+			   frame_color= TRANSPARENT, 
 			   label_text= self.task_string.get(), 
 			   font= self.font, 
 			   kill_command= self.delete_task,
